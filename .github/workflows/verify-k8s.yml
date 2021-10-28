@@ -149,9 +149,8 @@ jobs:
           data:
             config.json: |-
                 {
-                  "OIDCIssuers": {
-                    "https://kubernetes.default.svc": {
-                      "IssuerURL": "https://kubernetes.default.svc",
+                  "MetaIssuers": {
+                    "https://kubernetes.*.svc": {
                       "ClientID": "sigstore",
                       "Type": "kubernetes"
                     }
