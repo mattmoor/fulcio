@@ -37,10 +37,6 @@ type X509CA struct {
 }
 
 func (x *X509CA) CreateCertificate(_ context.Context, subject *challenges.ChallengeResult) (*ca.CodeSigningCertificate, error) {
-	return x.CreateCertificateWithCA(x, subject)
-}
-
-func (x *X509CA) CreateCertificateWithCA(certauth *X509CA, subject *challenges.ChallengeResult) (*ca.CodeSigningCertificate, error) {
 	// TODO: Track / increment serial nums instead, although unlikely we will create dupes, it could happen
 	uuid := uuid.New()
 	var serialNumber big.Int
@@ -78,7 +74,7 @@ func (x *X509CA) CreateCertificateWithCA(certauth *X509CA, subject *challenges.C
 	}
 	cert.ExtraExtensions = append(IssuerExtension(subject.Issuer), AdditionalExtensions(subject)...)
 
-	finalCertBytes, err := x509.CreateCertificate(rand.Reader, cert, certauth.RootCA, subject.PublicKey, certauth.PrivKey)
+	finalCertBytes, err := x509.CreateCertificate(rand.Reader, cert, x.RootCA, subject.PublicKey, x.PrivKey)
 	if err != nil {
 		return nil, err
 	}
